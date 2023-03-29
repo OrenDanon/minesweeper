@@ -1,0 +1,87 @@
+/* /* /* .occupied {
+    background-color: lightgray;
+} */
+
+body {
+    background-color: rgba(238, 227, 128, 0.455);
+}
+
+table {
+margin: auto;
+margin-top: 200px;
+}
+
+
+.clickedNum {
+    background-color: rgb(110, 110, 110)
+}
+
+table,
+td {
+    border: 3px solid rgb(255, 251, 0);
+    border-collapse: collapse;
+
+}
+.board td {
+    background-color: rgb(216, 216, 216);
+    margin: auto;
+    font-size: 28px;
+    color: red;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    transition: 0.5s;
+    padding: 10px;
+}
+
+.board td:hover {
+    background-color: rgb(165, 165, 165);
+    transition: 1s;
+}
+
+.hidden {
+    display: none;
+}
+
+.win-status {
+    margin-left: auto;
+}
+
+.win-msg {
+    color: red;
+    text-align: center;
+}
+
+.btn {
+    margin-left: 770px;
+    width: 300px;
+    height: 70px;
+    border-width: 4px;
+    border-radius: 35px;
+    font-size: 25px;
+    font-weight: bold;
+    color: red;
+    cursor: pointer;
+}
+
+.btn:hover {
+    width: 320px;
+    height: 80px;
+    border-width: 5px;
+    border-radius: 38px;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: oblique;
+    color: red;
+    border-color: blue;
+    cursor: pointer;
+    text-decoration: wavy;
+}
+
+.btn:active{
+    font-size: 23px;
+}
+
+.timer {
+    text-align: center;
+} 
