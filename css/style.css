@@ -6,42 +6,44 @@ body {
     background-color: rgba(238, 227, 128, 0.455);
 }
 
-table {
-margin: auto;
-margin-top: 200px;
-}
-
-
-.clickedNum {
-    background-color: rgb(110, 110, 110)
-}
-
-table,
-td {
-    border: 3px solid rgb(255, 251, 0);
-    border-collapse: collapse;
-
-}
-.board td {
-    background-color: rgb(216, 216, 216);
-    margin: auto;
-    font-size: 28px;
-    color: red;
-    width: 100px;
-    height: 100px;
+.board-container {
     text-align: center;
-    transition: 0.5s;
-    padding: 10px;
+    margin: 50px;
 }
 
-.board td:hover {
-    background-color: rgb(165, 165, 165);
-    transition: 1s;
+table {
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgb(255, 115, 0) 0%, rgba(255, 115, 0) 47%, rgba(255, 115, 0) 100%, rgba(0, 0, 0, 1) 100%, rgb(4, 46, 233) 100%, rgba(0, 212, 255, 1) 100%);
 }
+
+.cell {
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    font-size: 1.5em;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    font-weight: bolder;
+}
+
+.cell:hover {
+    background-color: rgb(209, 211, 203);
+}
+
+
+.shown-cell {
+    background-color: aquamarine;
+}
+
 
 .hidden {
     display: none;
 }
+
 
 .win-status {
     margin-left: auto;
@@ -51,6 +53,12 @@ td {
     color: red;
     text-align: center;
 }
+
+
+.boom {
+    background-color: red;
+}
+
 
 .btn {
     margin-left: 770px;

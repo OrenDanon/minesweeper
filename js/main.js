@@ -36,6 +36,7 @@ function onInit() {
     setMines(gBoard, gLevelEasy.MINES)
     setMinesNegCount(gBoard)
     renderBoard(gBoard, '.board-container')
+    gGame.isOn = true
     console.log(gBoard)
 }
 
@@ -70,9 +71,9 @@ function renderBoard(board, selector) {
             const className = `cell cell-${i}-${j}`
             // console.log(className);
             if (cell.isMine) {
-                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}">${MINE}</td>`
+                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${MINE}</span></td>`
             } else {
-                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}">${cell.minesAroundCount}</td>`
+                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${cell.minesAroundCount}</span></td>`
             }
 
         }
@@ -85,7 +86,7 @@ function renderBoard(board, selector) {
 }
 
 
-// 
+// util negs function, used in setMinesNegCount to update DOM and MODEL
 function getMinesNegCount(rowIdx, colIdx, board) {
     var negsCount = 0
 
@@ -126,7 +127,22 @@ function setMines(board, mineCount) {
     }
 }
 
+
+// check if cell is bomb, hidden, or has bombs around him
 function onCellClicked(elCell, i, j) {
+    if (gGame.isOn) {
+        gBoard[i][j].isShown = true
+        var tdata = elCell.querySelector("span")
+        tdata.classList.remove('hidden')
+        if (gBoard[i][j].isMine)
+        elCell.classList.add('boom')
+        else {
+            elCell.classList.add('shown-cell')
+            gGame.shownCount += 1
+        }
+    }
+    if (gBoard[i][j].isMine === true) return
+    expandShown(gBoard,elCell, i, j)
 }
 
 function onCellMarked(elCell) {
