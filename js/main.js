@@ -6,22 +6,11 @@ const FLAG = '🚩'
 var gBoard
 
 
-var gLevelEasy = {
+var gLevel = {
     SIZE: 4,
     MINES: 2
 }
 
-var gLevelMedium = {
-    SIZE: 5,
-    MINES: 4
-}
-
-var gLevelHard = {
-    SIZE: 6,
-    MINES: 6
-}
-
-// run on each cell on the mat 
 
 var gGame = {
     isOn: false,
@@ -32,21 +21,21 @@ var gGame = {
 
 
 function onInit() {
-    gBoard = createBoard(gLevelEasy.SIZE, gLevelEasy.SIZE)
-    setMines(gBoard, gLevelEasy.MINES)
+    gBoard = createBoard(gLevel.SIZE)
+    setMines(gBoard, gLevel.MINES)
     setMinesNegCount(gBoard)
     renderBoard(gBoard, '.board-container')
     gGame.isOn = true
-    console.log(gBoard)
+    // console.log(gBoard)
 }
 
 
 // util
-function createBoard(ROWS, COLS) {
+function createBoard(size) {
     const board = []
-    for (var i = 0; i < ROWS; i++) {
+    for (var i = 0; i < size; i++) {
         board.push([])
-        for (var j = 0; j < COLS; j++) {
+        for (var j = 0; j < size; j++) {
             board[i][j] = {
                 minesAroundCount: 0,
                 isShown: false,
@@ -71,9 +60,9 @@ function renderBoard(board, selector) {
             const className = `cell cell-${i}-${j}`
             // console.log(className);
             if (cell.isMine) {
-                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${MINE}</span></td>`
+                strHTML += `<td oncontextmenu="onCellMarked(event, this, ${i}, ${j})" onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${MINE}</span></td>`
             } else {
-                strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${cell.minesAroundCount}</span></td>`
+                strHTML += `<td oncontextmenu="onCellMarked(event, this, ${i}, ${j})" onclick="onCellClicked(this, ${i}, ${j})" class="${className}"><span class = "hidden">${cell.minesAroundCount}</span></td>`
             }
 
         }
@@ -102,7 +91,7 @@ function getMinesNegCount(rowIdx, colIdx, board) {
 }
 
 
-// check the negs of all set mines on the board
+// check the negs of all set mines on the board, update 
 function setMinesNegCount(board) {
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
@@ -122,7 +111,7 @@ function setMines(board, mineCount) {
             continue
         } else {
             board[x][y].isMine = true
-            console.log(x, y)
+            // console.log(x, y)
         }
     }
 }
@@ -131,28 +120,78 @@ function setMines(board, mineCount) {
 // check if cell is bomb, hidden, or has bombs around him
 function onCellClicked(elCell, i, j) {
     if (gGame.isOn) {
+        if (gBoard[i][j].isShown) return
         gBoard[i][j].isShown = true
-        var tdata = elCell.querySelector("span")
-        tdata.classList.remove('hidden')
+        var tdata = elCell.querySelector('span') // get the span - the number within the td
+        tdata.classList.remove('hidden') // remove the hidden class
         if (gBoard[i][j].isMine)
-        elCell.classList.add('boom')
+            elCell.classList.add('boom')
         else {
-            elCell.classList.add('shown-cell')
-            gGame.shownCount += 1
+            elCell.classList.add('shown-cell') // if class is not mine or hidden, show it when clicked
+            gGame.shownCount++
         }
     }
-    if (gBoard[i][j].isMine === true) return
-    expandShown(gBoard,elCell, i, j)
+    if (gBoard[i][j].isMine) return // if a mine is present, don't expand negs
+    expandShown(gBoard, i, j)
 }
 
-function onCellMarked(elCell) {
 
+// sets a chosen game level 
+function gameLevel(level) {
+    gLevel = level
+    onInit()
 }
+
+// put flags with right click
+function onCellMarked(ev, elCell, i, j) {
+    ev.preventDefault()
+    var tdata = elCell.querySelector('span') // get the span - where the number is stored (span within td)
+    var currCell = gBoard[i][j]
+    if (currCell.isShown) return // cannot flag shown cells
+
+    if (currCell.isMarked) {
+        currCell.isMarked = false // remove a flag
+        tdata.innerHTML = gBoard[i][j].minesAroundCount // this + line 155 would return the previous number under the flag, if there was any
+        tdata.classList.add('hidden')
+        if (currCell.isMine) {
+            // opposite of line 154, lower the flag count
+            gGame.markedCount--
+            tdata.innerHTML = MINE
+        }
+    } else {
+        // put a flag, don't hide the cell anymore, 
+        currCell.isMarked = true
+        tdata.innerHTML = FLAG
+        tdata.classList.remove('hidden')
+        if (currCell.isMine) {
+            gGame.markedCount++
+            console.log(gGame.markedCount)
+        }
+    }
+}
+
 
 function checkGameOver() {
 
 }
 
-function expandShown(board, elCell, i, j) {
 
+function expandShown(board, rowIdx, colIdx) {
+    // neighbor loop
+    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i >= board.length) continue
+        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+            var cell = board[i][j] // the cell in the matrix
+            if (j < 0 || j >= board[i].length) continue
+            if (i === rowIdx && j === colIdx) continue
+            if (cell.isMine || cell.isShown) continue
+            cell.isShown = true
+            // console.log(cell)
+            var elCell = document.querySelector(`.cell-${i}-${j}`) // save specific cell from DOM
+            var tdata = elCell.querySelector('span') // get the span in the specific cell
+            // console.log(elCell)
+            tdata.classList.remove('hidden')
+            elCell.classList.add('shown-cell')
+        }
+    }
 }
