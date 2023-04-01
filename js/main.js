@@ -151,6 +151,7 @@ function onCellClicked(elCell, i, j) {
 // sets a chosen game level 
 function gameLevel(level) {
     gLevel = level
+    clearInterval(gTimeInterval)
     onInit()
 }
 
@@ -259,6 +260,8 @@ function isVictory() {
 
 // restart the game
 function restartGame() {
+    var elSmiley = document.querySelector('.restart-btn')
+    elSmiley.innerText = '🙃'
     clearInterval(gTimeInterval)
     onInit()
 }
