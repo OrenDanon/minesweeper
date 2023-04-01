@@ -4,6 +4,7 @@
 const MINE = '💣'
 const FLAG = '🚩'
 var gBoard
+var gTimeInterval
 
 
 var gLevel = {
@@ -21,6 +22,7 @@ var gGame = {
 
 
 function onInit() {
+    startTimer()
     gBoard = createBoard(gLevel.SIZE)
     setMines(gBoard, gLevel.MINES)
     setMinesNegCount(gBoard)
@@ -49,7 +51,11 @@ function createBoard(size) {
 
 // util
 function renderBoard(board, selector) {
-
+    var elLive = document.querySelector('.live-count')
+    elLive.innerText = 3
+    gGame.shownCount = 0
+    gGame.markedCount = 0
+    // gGame.secsPassed = 0
     var strHTML = '<table border="0"><tbody>'
     for (var i = 0; i < board.length; i++) {
 
@@ -111,7 +117,6 @@ function setMines(board, mineCount) {
             continue
         } else {
             board[x][y].isMine = true
-            // console.log(x, y)
         }
     }
 }
@@ -121,18 +126,25 @@ function setMines(board, mineCount) {
 function onCellClicked(elCell, i, j) {
     if (gGame.isOn) {
         if (gBoard[i][j].isShown) return
+        gGame.shownCount++
         gBoard[i][j].isShown = true
         var tdata = elCell.querySelector('span') // get the span - the number within the td
         tdata.classList.remove('hidden') // remove the hidden class
-        if (gBoard[i][j].isMine)
+        if (gBoard[i][j].isMine) {
             elCell.classList.add('boom')
+            var elLive = document.querySelector('.live-count') // update live count
+            elLive.innerText--
+            gGame.markedCount++
+            gBoard[i][j].isMarked = true
+        }
         else {
             elCell.classList.add('shown-cell') // if class is not mine or hidden, show it when clicked
-            gGame.shownCount++
         }
     }
+    checkGameOver()
     if (gBoard[i][j].isMine) return // if a mine is present, don't expand negs
     expandShown(gBoard, i, j)
+    checkGameOver()
 }
 
 
@@ -168,11 +180,25 @@ function onCellMarked(ev, elCell, i, j) {
             console.log(gGame.markedCount)
         }
     }
+    checkGameOver()
 }
 
 
 function checkGameOver() {
-
+    var elLive = document.querySelector('.live-count')
+    if (parseInt(elLive.innerText) === 0) {
+        isDefeat()
+        gGame.isOn = false
+        return
+    }
+    console.log(gLevel.SIZE)
+    console.log(gGame.shownCount)
+    console.log((gLevel.SIZE * gLevel.SIZE) - gLevel.MINES)
+    if (gLevel.MINES === gGame.markedCount && gGame.shownCount >= (gLevel.SIZE * gLevel.SIZE) - gLevel.MINES) {
+        isVictory()
+        gGame.isOn = false
+        return
+    }
 }
 
 
@@ -186,6 +212,7 @@ function expandShown(board, rowIdx, colIdx) {
             if (i === rowIdx && j === colIdx) continue
             if (cell.isMine || cell.isShown) continue
             cell.isShown = true
+            gGame.shownCount++
             // console.log(cell)
             var elCell = document.querySelector(`.cell-${i}-${j}`) // save specific cell from DOM
             var tdata = elCell.querySelector('span') // get the span in the specific cell
@@ -194,4 +221,38 @@ function expandShown(board, rowIdx, colIdx) {
             elCell.classList.add('shown-cell')
         }
     }
+}
+
+
+// start the timer
+function startTimer() {
+    var startTime = Date.now()
+    gTimeInterval = setInterval(setTimer, 1, startTime)
+}
+
+
+// set a timer - util
+function setTimer(startTime) {
+    var elapsedTime = Date.now() - startTime
+    var elTimer = document.querySelector('.timer')
+    elTimer.innerText = (elapsedTime / 1000).toFixed(3)
+}
+
+
+function isDefeat() {
+    console.log('you lost')
+    var elSmiley = document.querySelector('.restart-btn')
+    elSmiley.innerText = '🤯'
+}
+
+
+function isVictory() {
+    console.log('you won')
+    var elSmiley = document.querySelector('.restart-btn')
+    elSmiley.innerText = '😎'
+}
+
+function restartGame() {
+    clearInterval(gTimeInterval)
+    onInit()
 }

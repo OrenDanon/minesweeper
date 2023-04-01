@@ -41,16 +41,6 @@ table {
 }
 
 
-.win-status {
-    margin-left: auto;
-}
-
-.win-msg {
-    color: red;
-    text-align: center;
-}
-
-
 .boom {
     background-color: red;
 }
@@ -82,10 +72,39 @@ table {
     text-decoration: wavy;
 }
 
-.btn:active{
+.btn:active {
     font-size: 23px;
 }
 
 .timer {
     text-align: center;
-} 
+}
+
+h3 {
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 36px;
+    color: #5a0000;
+    text-shadow: 2px 2px 0 #000, 4px 4px 0 #520000;
+}
+
+.restart-btn {
+    margin-left: 900px;
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+}
+
+
+footer {
+    background: linear-gradient(to right, rgb(3, 252, 115), #00f);
+    padding: 20px;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}

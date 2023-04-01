@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,13 +8,20 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Oren Danon's Minesweeper</title>
 </head>
-<body onload="onInit()">
-    <button class="btn" onclick ="gameLevel({SIZE: 4, MINES: 2})">EASY - 16</button>
-    <button class="btn" onclick ="gameLevel({SIZE: 8, MINES: 14})">MEDIUM - 64</button>
-    <button class="btn" onclick ="gameLevel({SIZE: 12, MINES: 32})">HARD - 144</button>
 
+<body onload="onInit()">
+    <button class="btn" onclick="gameLevel({SIZE: 4, MINES: 2})">EASY - 16</button>
+    <button class="btn" onclick="gameLevel({SIZE: 8, MINES: 14})">MEDIUM - 64</button>
+    <button class="btn" onclick="gameLevel({SIZE: 12, MINES: 32})">HARD - 144</button>
+    <h3 class="live-text"><span class="live-count">3</span> lives left</h3>
+    <button class="restart-btn" onclick="restartGame()">🙃</button>
+    <h4 class="timer">000</h4>
     <div class="board-container"></div>
     <script src="js/main.js"></script>
     <script src="js/utils.js"></script>
+    <footer>
+        <p>Oren Danon</p>
+      </footer>
 </body>
+
 </html>
