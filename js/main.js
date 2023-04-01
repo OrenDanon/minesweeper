@@ -184,16 +184,17 @@ function onCellMarked(ev, elCell, i, j) {
 }
 
 
+// check if the game is over by the set conditions
 function checkGameOver() {
     var elLive = document.querySelector('.live-count')
-    if (parseInt(elLive.innerText) === 0) {
+    if (parseInt(elLive.innerText) === 0) { // text within elLive - live count was actually a string
         isDefeat()
         gGame.isOn = false
         return
     }
-    console.log(gLevel.SIZE)
-    console.log(gGame.shownCount)
-    console.log((gLevel.SIZE * gLevel.SIZE) - gLevel.MINES)
+
+    // first check is if the mines and marked mines are equal,
+    //  second is if the count of open cells is bigger than or equal to the number of the board size minus the existing mines
     if (gLevel.MINES === gGame.markedCount && gGame.shownCount >= (gLevel.SIZE * gLevel.SIZE) - gLevel.MINES) {
         isVictory()
         gGame.isOn = false
@@ -202,6 +203,7 @@ function checkGameOver() {
 }
 
 
+// expand 1st degree neighbors
 function expandShown(board, rowIdx, colIdx) {
     // neighbor loop
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
@@ -239,6 +241,7 @@ function setTimer(startTime) {
 }
 
 
+// defeat status
 function isDefeat() {
     console.log('you lost')
     var elSmiley = document.querySelector('.restart-btn')
@@ -246,12 +249,15 @@ function isDefeat() {
 }
 
 
+// victory status
 function isVictory() {
     console.log('you won')
     var elSmiley = document.querySelector('.restart-btn')
     elSmiley.innerText = '😎'
 }
 
+
+// restart the game
 function restartGame() {
     clearInterval(gTimeInterval)
     onInit()
